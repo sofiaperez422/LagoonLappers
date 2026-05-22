@@ -35,11 +35,12 @@ labrynth_clean <- labrynth |> # create new object
 
 ```{r}
 #| label: Shadow and flower plot
+#| warning: false
 ggplot(data = labrynth_clean,
        aes(x = shadow_from_tree_root_ft,
        y = flower_bud_count,
        color = plant_species)) +
-  geom_point() +
+  geom_point(size = 3.5) +
   labs(title = "Flower bud patterns by tree shadow",
        x = "Shadow length from tree root (ft)",
        y = "Flower bud count",
@@ -57,10 +58,28 @@ ggplot(data = labrynth_clean,
        aes(x = wind_speed_mph,
            y = height_of_each_plant_species_in,
            color = plant_species)) +
-  geom_point() +
+  geom_point(size = 3.5) +
   theme_light() +
   labs(title = "Wind speed relationship with plant growth",
        x = "Wind speed (mph)",
+       y = "Plant height (in)",
+       color = "Species") +
+  theme(legend.position = "bottom",
+        plot.title = element_text(hjust = 0.5))
+```
+
+## Figure 3. Species height over time
+
+```{r}
+#| label: species height over time plot
+ggplot(data = labrynth_clean,
+       aes(x = date,
+           y = height_of_each_plant_species_in,
+           color = plant_species)) +
+  geom_point(size = 3.5) +
+  theme_light() +
+  labs(title = "Plant growth by species over time",
+       x = "Date",
        y = "Plant height (in)",
        color = "Species") +
   theme(legend.position = "bottom",
