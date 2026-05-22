@@ -25,7 +25,9 @@ labrynth <- read_csv(here("data",
                              "LagoonLappers_DataSheetES153 - R-Studio Data.csv"))
 # clean data
 labrynth_clean <- labrynth |> # create new object
-  clean_names() |>  # clean column names to lower case and underscores
+  clean_names() # clean column names to lower case and underscores
+
+labrynth_adj <- labrynth_clean |> #create new object for voiding a scpecies
   filter(common_name_plant %in% c("Great Brome Grass", "Scarlet Pimpernel", "Wild Radish","*Coyote Brush"))
 ```
 
