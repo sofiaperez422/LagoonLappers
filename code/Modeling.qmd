@@ -1,0 +1,60 @@
+---
+title: "Modeling"
+author: "Sofia Perez"
+date: "2026-05-21"
+format: html
+editor: visual
+---
+
+## setup
+
+```{r}
+#| label: packages and data
+#| message: false
+# read in your packages here
+library(tidyverse) # general use
+library(here) # file organization
+library(janitor) # cleaning data frames
+library(readxl) # reading excel files
+library(scales) # modifying axis labels
+library(ggeffects) # getting model predictions
+library(MuMIn) # model selection
+
+# read in your data here
+labrynth <- read_csv(here("data",
+                             "LagoonLappers_DataSheetES153 - R-Studio Data.csv"))
+# clean data
+labrynth_clean <- labrynth |> # create new object
+  clean_names() + # clean column names to lower case and underscores
+
+```
+
+# Figures
+
+## Figure 1. Sunlight Exposure and Flower Count
+
+```{r}
+#| label: Shadow and flower plot
+ggplot(data = labrynth_clean,
+       aes(x = shadow_from_tree_root_ft,
+       y = flower_bud_count,
+       color = plant_species)) +
+  geom_point() +
+  labs(title = "Flower bud patterns by tree shadow",
+       x = "Shadow length from tree root (ft)",
+       y = "Flower bud count",
+       color = "Species") +
+  theme_light() + # change theme 
+  theme(legend.position = "bottom")
+```
+
+## Figure 2. Wind and plant height
+
+```{r}
+#| label: Wind speed and plant height
+ggplot(data = labrynth_clean,
+       aes(x = wind_speed_mph,
+           y = height_of_each_plant_species_in,
+           color = plant_species)) +
+  geom_point()
+```

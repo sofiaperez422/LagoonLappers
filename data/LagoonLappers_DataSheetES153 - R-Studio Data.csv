@@ -1,0 +1,31 @@
+date,time,plant species,common name plant,flower/bud count,Height of each plant species (in),wind speed (mph),shadow from tree root (ft)
+2026-04-06,2:30:00 PM,Bromus diandrus,Great Brome Grass,0,20,8,16
+2026-04-06,2:30:00 PM,*Ambrosia psilostachya,*Western Ragweed,0,16,8,16
+2026-04-06,2:30:00 PM,Lysimachia arvensis,Scarlet Pimpernel,18,44,8,16
+2026-04-06,2:30:00 PM,Raphanus raphanistrum,Wild Radish,,35,8,16
+2026-04-06,2:30:00 PM,*Baccharis pilurais,*Coyote Brush,0,50,8,16
+2026-04-15,1:44:00 PM,Bromus diandrus,Great Brome Grass,0,32,6,15
+2026-04-15,1:44:00 PM,*Ambrosia psilostachya,*Western Ragweed,0,18,6,15
+2026-04-15,1:44:00 PM,Lysimachia arvensis,Scarlet Pimpernel,43,9,6,15
+2026-04-15,1:44:00 PM,Raphanus raphanistrum,Wild Radish,38,37,6,15
+2026-04-15,1:44:00 PM,*Baccharis pilurais,*Coyote Brush,0,52,6,15
+2026-04-22,3:21:00 PM,Bromus diandrus,Great Brome Grass,0,33,20,15
+2026-04-22,3:21:00 PM,*Ambrosia psilostachya,*Western Ragweed,0,18,20,15
+2026-04-22,3:21:00 PM,Lysimachia arvensis,Scarlet Pimpernel,45,9,20,15
+2026-04-22,3:21:00 PM,Raphanus raphanistrum,Wild Radish,40,38,20,15
+2026-04-22,3:21:00 PM,*Baccharis pilurais,*Coyote Brush,0,23,20,15
+2026-04-29,4:15:00 PM,Bromus diandrus,Great Brome Grass,0,35,7,17
+2026-04-29,4:15:00 PM,*Ambrosia psilostachya,*Western Ragweed,0,,7,17
+2026-04-29,4:15:00 PM,Lysimachia arvensis,Scarlet Pimpernel,39,10,7,17
+2026-04-29,4:15:00 PM,Raphanus raphanistrum,Wild Radish,40,44,7,17
+2026-04-29,4:15:00 PM,*Baccharis pilurais,*Coyote Brush,0,23,7,17
+2026-05-06,3:52:00 PM,Bromus diandrus,Great Brome Grass,0,29,6,15
+2026-05-06,3:52:00 PM,*Ambrosia psilostachya,*Western Ragweed,0,21,6,15
+2026-05-06,3:52:00 PM,Lysimachia arvensis,Scarlet Pimpernel,52,52,6,15
+2026-05-06,3:52:00 PM,Raphanus raphanistrum,Wild Radish,47,41,6,15
+2026-05-06,3:52:00 PM,*Baccharis pilurais,*Coyote Brush,0,25,6,15
+2026-05-13,3:15:00 PM,Bromus diandrus,Great Brome Grass,0,30,7,15
+2026-05-13,3:15:00 PM,*Ambrosia psilostachya,*Western Ragweed,0,,7,15
+2026-05-13,3:15:00 PM,Lysimachia arvensis,Scarlet Pimpernel,20,7,7,15
+2026-05-13,3:15:00 PM,Raphanus raphanistrum,Wild Radish,23,40,7,15
+2026-05-13,3:15:00 PM,*Baccharis pilurais,*Coyote Brush,0,53,7,15
