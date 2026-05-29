@@ -68,7 +68,7 @@ ggplot(data = labrynth_clean,
   geom_line(data = model_pred1, # plot model prediction as line using mod_preds object
             aes(x = x, # use same x-axis
                 y = predicted), # set y-axis as predicted values
-            linewidth = 2, # change line width to thicker 
+            linewidth = 1, # change line width to thicker 
             color = "firebrick4") + # change color
   geom_point(size = 3.5,
              alpha = 0.5,
@@ -90,6 +90,7 @@ ggplot(data = labrynth_clean,
 
 ```{r}
 #| label: species height over time plot
+#| warning: false
 ggplot(data = labrynth_clean,
        aes(x = date,
            y = height_of_each_plant_species_in,
@@ -109,15 +110,40 @@ ggplot(data = labrynth_clean,
 
 **Hypothesis 3.** Consistently strong winds will tilt and decrease overall growth height of plants in our study system.
 
+```{r}
+#| label: linear regression wind
+wind_lm <- lm(formula = height_of_each_plant_species_in ~ wind_speed_mph, data = labrynth_clean)
+```
+
+```{r}
+#| label: linear model wind
+model_pred2 <- ggpredict(
+  wind_lm,
+  terms = "wind_speed_mph [5.5:20.5 by = 0.1]"
+) 
+```
+
 ## Figure 3. Wind and plant height
 
 ```{r}
 #| label: Wind speed and plant height
 ggplot(data = labrynth_clean,
        aes(x = wind_speed_mph,
-           y = height_of_each_plant_species_in,
-           color = common_name_plant)) +
-  geom_point(size = 3.5) +
+           y = height_of_each_plant_species_in)) +
+  geom_ribbon(data = model_pred2, # plot prediction 95% CI using mod_preds object
+              aes(x = x, # use same x-axix
+                  y = predicted, # set y-axis as predicted values
+                  ymin = conf.low, # set bottom of region
+                  ymax = conf.high), # set top
+              alpha = 0.2, # adjust tranparency
+              fill = "firebrick2") + # change color
+  geom_line(data = model_pred2, # plot model prediction as line using mod_preds object
+            aes(x = x, # use same x-axis
+                y = predicted), # set y-axis as predicted values
+            linewidth = 1, # change line width to thicker 
+            color = "firebrick4") +
+  geom_point(size = 3.5,
+             aes(color = common_name_plant)) +
   theme_light(base_family = "Psans") + # change theme and font
   labs(title = "Wind speed relationship with plant growth",
        x = "Wind speed (mph)",
