@@ -26,12 +26,11 @@ labrynth <- read_csv(here("data",
 # clean data
 labrynth_clean <- labrynth |> # create new object
   clean_names() # clean column names to lower case and underscores
-
-labrynth_adj <- labrynth_clean |> #create new object for voiding a scpecies
-  filter(common_name_plant %in% c("Great Brome Grass", "Scarlet Pimpernel", "Wild Radish","*Coyote Brush"))
 ```
 
 # Figures
+
+**Hypothesis 1.** Long-term daily direct exposure to sunlight on a patch of vegetation will show a higher flower count compared to vegetation characterized by shadows from trees.
 
 ## Figure 1. Sunlight Exposure and Flower Count
 
@@ -41,7 +40,7 @@ labrynth_adj <- labrynth_clean |> #create new object for voiding a scpecies
 ggplot(data = labrynth_clean,
        aes(x = shadow_from_tree_root_ft,
        y = flower_bud_count,
-       color = plant_species)) +
+       color = common_name_plant)) +
   geom_point(size = 3.5,
              alpha = 0.5) +
   labs(title = "Flower bud patterns by tree shadow",
@@ -53,14 +52,36 @@ ggplot(data = labrynth_clean,
         plot.title = element_text(hjust = 0.5))
 ```
 
-## Figure 2. Wind and plant height
+**Hypothesis 2.** Native plant vegetation will be shorter if there is taller non-native grasses in close proximity.
+
+## Figure 2. Species height over time
+
+```{r}
+#| label: species height over time plot
+ggplot(data = labrynth_clean,
+       aes(x = date,
+           y = height_of_each_plant_species_in,
+           color = common_name_plant)) +
+  geom_point(size = 3.5) +
+  theme_light() +
+  labs(title = "Plant growth by species over time",
+       x = "Date",
+       y = "Plant height (in)",
+       color = "Species") +
+  theme(legend.position = "right",
+        plot.title = element_text(hjust = 0.5))
+```
+
+**Hypothesis 3.** Consistently strong winds will tilt and decrease overall growth height of plants in our study system.
+
+## Figure 3. Wind and plant height
 
 ```{r}
 #| label: Wind speed and plant height
 ggplot(data = labrynth_clean,
        aes(x = wind_speed_mph,
            y = height_of_each_plant_species_in,
-           color = plant_species)) +
+           color = common_name_plant)) +
   geom_point(size = 3.5) +
   theme_light() +
   labs(title = "Wind speed relationship with plant growth",
@@ -71,20 +92,4 @@ ggplot(data = labrynth_clean,
         plot.title = element_text(hjust = 0.5))
 ```
 
-## Figure 3. Species height over time
-
-```{r}
-#| label: species height over time plot
-ggplot(data = labrynth_clean,
-       aes(x = date,
-           y = height_of_each_plant_species_in,
-           color = plant_species)) +
-  geom_point(size = 3.5) +
-  theme_light() +
-  labs(title = "Plant growth by species over time",
-       x = "Date",
-       y = "Plant height (in)",
-       color = "Species") +
-  theme(legend.position = "right",
-        plot.title = element_text(hjust = 0.5))
-```
+**Extra figure** – yadayada
