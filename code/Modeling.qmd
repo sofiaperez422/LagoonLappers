@@ -19,6 +19,11 @@ library(readxl) # reading excel files
 library(scales) # modifying axis labels
 library(ggeffects) # getting model predictions
 library(MuMIn) # model selection
+library(showtext) # to show custom text font on plots
+
+font_add_google(name = "Public Sans", # name of font on Google font website
+              family = "Psans") # name to call in font as
+showtext_auto()
 
 # read in your data here
 labrynth <- read_csv(here("data",
@@ -32,6 +37,19 @@ labrynth_clean <- labrynth |> # create new object
 
 **Hypothesis 1.** Long-term daily direct exposure to sunlight on a patch of vegetation will show a higher flower count compared to vegetation characterized by shadows from trees.
 
+```{r}
+#| label: linear regression shadow
+shadow_lm <- lm(formula = flower_bud_count ~ shadow_from_tree_root_ft, data = labrynth_clean)
+```
+
+```{r}
+#| label: linear model shadow
+model_pred1 <- ggpredict(
+  shadow_lm,
+  terms = "shadow_from_tree_root_ft [14.95:17.05 by = 0.01]"
+) 
+```
+
 ## Figure 1. Sunlight Exposure and Flower Count
 
 ```{r}
@@ -39,15 +57,29 @@ labrynth_clean <- labrynth |> # create new object
 #| warning: false
 ggplot(data = labrynth_clean,
        aes(x = shadow_from_tree_root_ft,
-       y = flower_bud_count,
-       color = common_name_plant)) +
+       y = flower_bud_count)) +
+  geom_ribbon(data = model_pred1, # plot prediction 95% CI using mod_preds object
+              aes(x = x, # use same x-axix
+                  y = predicted, # set y-axis as predicted values
+                  ymin = conf.low, # set bottom of region
+                  ymax = conf.high), # set top
+              alpha = 0.2, # adjust tranparency
+              fill = "firebrick2") + # change color
+  geom_line(data = model_pred1, # plot model prediction as line using mod_preds object
+            aes(x = x, # use same x-axis
+                y = predicted), # set y-axis as predicted values
+            linewidth = 2, # change line width to thicker 
+            color = "firebrick4") + # change color
   geom_point(size = 3.5,
-             alpha = 0.5) +
+             alpha = 0.5,
+             aes(color = common_name_plant)) +
+  
+  
   labs(title = "Flower bud patterns by tree shadow",
        x = "Shadow length from tree root (ft)",
        y = "Flower bud count",
        color = "Species") +
-  theme_light() + # change theme 
+  theme_light(base_family = "Psans") + # change theme and font
   theme(legend.position = "right",
         plot.title = element_text(hjust = 0.5))
 ```
@@ -63,7 +95,7 @@ ggplot(data = labrynth_clean,
            y = height_of_each_plant_species_in,
            color = common_name_plant)) +
   geom_point(size = 3.5) +
-  theme_light() +
+  theme_light(base_family = "Psans") + # change theme and font
   labs(title = "Plant growth by species over time",
        x = "Date",
        y = "Plant height (in)",
@@ -83,7 +115,7 @@ ggplot(data = labrynth_clean,
            y = height_of_each_plant_species_in,
            color = common_name_plant)) +
   geom_point(size = 3.5) +
-  theme_light() +
+  theme_light(base_family = "Psans") + # change theme and font
   labs(title = "Wind speed relationship with plant growth",
        x = "Wind speed (mph)",
        y = "Plant height (in)",
