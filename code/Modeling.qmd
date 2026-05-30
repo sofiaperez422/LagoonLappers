@@ -20,6 +20,7 @@ library(scales) # modifying axis labels
 library(ggeffects) # getting model predictions
 library(MuMIn) # model selection
 library(showtext) # to show custom text font on plots
+library(flextable) # create tables for model summaries
 
 font_add_google(name = "Public Sans", # name of font on Google font website
               family = "Psans") # name to call in font as
@@ -40,6 +41,15 @@ labrynth_clean <- labrynth |> # create new object
 ```{r}
 #| label: linear regression shadow
 shadow_lm <- lm(formula = flower_bud_count ~ shadow_from_tree_root_ft, data = labrynth_clean)
+
+flextable::as_flextable(shadow_lm)
+```
+
+```{r}
+#| label: correlation shadow
+cor.test(labrynth_clean$flower_bud_count, labrynth_clean$shadow_from_tree_root_ft, # run a correlation test to check strength between salinity and biomass
+         method = "pearson") |>  # specifcy pearson rank correlation
+  print()
 ```
 
 ```{r}
@@ -47,7 +57,7 @@ shadow_lm <- lm(formula = flower_bud_count ~ shadow_from_tree_root_ft, data = la
 model_pred1 <- ggpredict(
   shadow_lm,
   terms = "shadow_from_tree_root_ft [14.95:17.05 by = 0.01]"
-) 
+)
 ```
 
 ## Figure 1. Sunlight Exposure and Flower Count
@@ -86,6 +96,14 @@ ggplot(data = labrynth_clean,
 
 **Hypothesis 2.** Native plant vegetation will be shorter if there is taller non-native grasses in close proximity.
 
+```{r}
+#| label: model species and height relationship
+model_species <- lm(height_of_each_plant_species_in ~ common_name_plant,
+             data = labrynth_clean)
+
+  summary(model_species)
+```
+
 ## Figure 2. Species height over time
 
 ```{r}
@@ -113,6 +131,15 @@ ggplot(data = labrynth_clean,
 ```{r}
 #| label: linear regression wind
 wind_lm <- lm(formula = height_of_each_plant_species_in ~ wind_speed_mph, data = labrynth_clean)
+
+flextable::as_flextable(wind_lm)
+```
+
+```{r}
+#| label: correlation wind
+cor.test(labrynth_clean$height_of_each_plant_species_in, labrynth_clean$wind_speed_mph, # run a correlation test to check strength between salinity and biomass
+         method = "pearson") |>  # specifcy pearson rank correlation
+  print()
 ```
 
 ```{r}
