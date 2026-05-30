@@ -4,6 +4,10 @@ author: "Sofia Perez"
 date: "2026-05-21"
 format: html
 editor: visual
+toc: true # use this to display a table of contents
+execute:
+  message: false # use this to make sure messages don't show up
+  warning: false # use this to make sure warnings don't show up
 ---
 
 ## setup
@@ -36,11 +40,14 @@ labrynth_clean <- labrynth |> # create new object
 
 # Figures
 
-**Hypothesis 1.** Long-term daily direct exposure to sunlight on a patch of vegetation will show a higher flower count compared to vegetation characterized by shadows from trees.
+## Hypothesis 1.
+
+**Long-term daily direct exposure to sunlight on a patch of vegetation will show a higher flower count compared to vegetation characterized by shadows from trees.**
 
 ```{r}
 #| label: linear regression shadow
-shadow_lm <- lm(formula = flower_bud_count ~ shadow_from_tree_root_ft, data = labrynth_clean)
+shadow_lm <- lm(formula = flower_bud_count ~ shadow_from_tree_root_ft,
+                data = labrynth_clean)
 
 flextable::as_flextable(shadow_lm)
 ```
@@ -60,7 +67,7 @@ model_pred1 <- ggpredict(
 )
 ```
 
-## Figure 1. Sunlight Exposure and Flower Count
+### Figure 1. Sunlight Exposure and Flower Count
 
 ```{r}
 #| label: Shadow and flower plot
@@ -94,17 +101,66 @@ ggplot(data = labrynth_clean,
         plot.title = element_text(hjust = 0.5))
 ```
 
-**Hypothesis 2.** Native plant vegetation will be shorter if there is taller non-native grasses in close proximity.
+## Hypothesis 2.
+
+**Native plant vegetation will be shorter if there is taller non-native grasses in close proximity.**
 
 ```{r}
-#| label: model species and height relationship
-model_species <- lm(height_of_each_plant_species_in ~ common_name_plant,
-             data = labrynth_clean)
+#| label: Coyote Brush linear regression
+coyote <- labrynth_clean |> 
+  filter(common_name_plant == "*Coyote Brush") # only include rows where `jtnp` is in the `park` column
 
-  summary(model_species)
+coyote_lm <- lm(formula = height_of_each_plant_species_in ~ date,
+                data = coyote)
+
+flextable::as_flextable(coyote_lm)
 ```
 
-## Figure 2. Species height over time
+```{r}
+#| label: Western Ragweed linear regression
+ragweed <- labrynth_clean |> 
+  filter(common_name_plant == "*Western Ragweed") # only include rows where `Western Ragweed` is in the species column
+
+ragweed_lm <- lm(formula = height_of_each_plant_species_in ~ date,
+                data = ragweed)
+
+flextable::as_flextable(ragweed_lm)
+```
+
+```{r}
+#| label: Great Brome Grass linear regression
+grass <- labrynth_clean |> 
+  filter(common_name_plant == "Great Brome Grass") # only include rows where `Great Brome Grass` is in the species column
+
+grass_lm <- lm(formula = height_of_each_plant_species_in ~ date,
+                data = grass)
+
+flextable::as_flextable(grass_lm)
+```
+
+```{r}
+#| label: Scaret Pimpernel linear regression
+scarlet <- labrynth_clean |> 
+  filter(common_name_plant == "Scarlet Pimpernel") # only include rows where `Scarlet Pimpernel` is in the species column
+
+scarlet_lm <- lm(formula = height_of_each_plant_species_in ~ date,
+                data = scarlet)
+
+flextable::as_flextable(scarlet_lm)
+```
+
+```{r}
+#| label: Wild Radish linear regression
+radish <- labrynth_clean |> 
+  filter(common_name_plant == "Wild Radish") # only include rows where `Scarlet Pimpernel` is in the species column
+
+radish_lm <- lm(formula = height_of_each_plant_species_in ~ date,
+                data = radish)
+
+flextable::as_flextable(radish_lm)
+```
+
+### Figure 2. Species height over time
 
 ```{r}
 #| label: species height over time plot
@@ -126,11 +182,14 @@ ggplot(data = labrynth_clean,
         plot.title = element_text(hjust = 0.5))
 ```
 
-**Hypothesis 3.** Consistently strong winds will tilt and decrease overall growth height of plants in our study system.
+## Hypothesis 3.
+
+**Consistently strong winds will tilt and decrease overall growth height of plants in our study system.**
 
 ```{r}
 #| label: linear regression wind
-wind_lm <- lm(formula = height_of_each_plant_species_in ~ wind_speed_mph, data = labrynth_clean)
+wind_lm <- lm(formula = height_of_each_plant_species_in ~ wind_speed_mph,
+              data = labrynth_clean)
 
 flextable::as_flextable(wind_lm)
 ```
@@ -150,7 +209,7 @@ model_pred2 <- ggpredict(
 ) 
 ```
 
-## Figure 3. Wind and plant height
+### Figure 3. Wind and plant height
 
 ```{r}
 #| label: Wind speed and plant height
@@ -180,4 +239,4 @@ ggplot(data = labrynth_clean,
         plot.title = element_text(hjust = 0.5))
 ```
 
-**Extra figure** – yadayada
+:P
