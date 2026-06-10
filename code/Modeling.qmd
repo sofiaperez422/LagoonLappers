@@ -247,7 +247,7 @@ non <- ggplot(data = non_native,
   theme_minimal(base_family = "Gel") +
   theme(text = element_text(size = 30)) +
   labs(x = NULL,
-       y = "Height")
+       y = "Height (in)")
 
 wrap_plots(nat, non,
      axes = "collect_y",
@@ -280,7 +280,7 @@ ggplot(data = locality_df,
   theme(text = element_text(size = 30),
         legend.position = "none") +
   labs(x = NULL,
-       y = "Height")
+       y = "Height (in)")
 ```
 
 ##### statistical analysis – Mann-Whitney U
