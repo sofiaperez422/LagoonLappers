@@ -105,12 +105,12 @@ ggplot(data = labrynth_clean,
                   ymin = conf.low, # set bottom of region
                   ymax = conf.high), # set top
               alpha = 0.2, # adjust tranparency
-              fill = "mediumpurple") + # change color
+              fill = "royalblue1") + # change color
   geom_line(data = model_pred1, # plot model prediction as line using mod_preds object
             aes(x = x, # use same x-axis
                 y = predicted), # set y-axis as predicted values
             linewidth = 1, # change line width to thicker 
-            color = "mediumpurple4") + # change color
+            color = "royalblue4") + # change color
   geom_point(size = 3.5,
              alpha = 0.5,
              aes(color = common_name_plant)) +
@@ -276,7 +276,7 @@ ggplot(data = locality_df,
               width = 0.2) + # narrowing width of jitter
   scale_color_manual(values = c("Native" = "darkolivegreen",
                                 "Non-native" = "aquamarine3")) + # changing the point colors
-  theme_minimal(base_family = "Gel") +
+  theme_classic(base_family = "Gel") +
   theme(text = element_text(size = 30),
         legend.position = "none") +
   labs(x = NULL,
