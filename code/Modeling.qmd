@@ -25,9 +25,10 @@ library(ggeffects) # getting model predictions
 library(MuMIn) # model selection
 library(showtext) # to show custom text font on plots
 library(flextable) # create tables for model summaries
+library(patchwork) # combining plots
 
-font_add_google(name = "Public Sans", # name of font on Google font website
-              family = "Psans") # name to call in font as
+font_add_google(name = "Gelasio", # name of font on Google font website
+              family = "Gel") # name to call in font as
 showtext_auto()
 
 # read in your data here
@@ -36,6 +37,22 @@ labrynth <- read_csv(here("data",
 # clean data
 labrynth_clean <- labrynth |> # create new object
   clean_names() # clean column names to lower case and underscores
+
+# native df
+native <- labrynth_clean |> 
+  rename(height = height_of_each_plant_species_in,
+         species = common_name_plant) |> 
+  mutate(nati = "Native") |> 
+  select(species, height, nati) |> 
+  filter(species %in% c("*Western Ragweed", "*Coyote Brush"))
+
+# non_native df
+non_native <- labrynth_clean |> 
+  rename(height = height_of_each_plant_species_in,
+         species = common_name_plant) |> 
+  mutate(nonn = "Non-native") |>  
+  select(species, height, nonn) |> 
+  filter_out(species %in% c("*Western Ragweed", "*Coyote Brush"))
 ```
 
 # Figures
@@ -81,12 +98,12 @@ ggplot(data = labrynth_clean,
                   ymin = conf.low, # set bottom of region
                   ymax = conf.high), # set top
               alpha = 0.2, # adjust tranparency
-              fill = "firebrick2") + # change color
+              fill = "mediumpurple") + # change color
   geom_line(data = model_pred1, # plot model prediction as line using mod_preds object
             aes(x = x, # use same x-axis
                 y = predicted), # set y-axis as predicted values
             linewidth = 1, # change line width to thicker 
-            color = "firebrick4") + # change color
+            color = "mediumpurple4") + # change color
   geom_point(size = 3.5,
              alpha = 0.5,
              aes(color = common_name_plant)) +
@@ -96,8 +113,9 @@ ggplot(data = labrynth_clean,
        x = "Shadow length from tree root (ft)",
        y = "Flower bud count",
        color = "Species") +
-  theme_light(base_family = "Psans") + # change theme and font
-  theme(legend.position = "right",
+  theme_bw(base_family = "Gel") + # change theme and font
+  theme(text = element_text(size = 30), # set font size
+        legend.position = "right",
         plot.title = element_text(hjust = 0.5))
 ```
 
@@ -160,10 +178,10 @@ radish_lm <- lm(formula = height_of_each_plant_species_in ~ date,
 flextable::as_flextable(radish_lm)
 ```
 
-### Figure 2. Species height over time
+### Figure 2. Species height time series
 
 ```{r}
-#| label: species height over time plot
+#| label: species height time series
 #| warning: false
 ggplot(data = labrynth_clean,
        aes(x = date,
@@ -173,13 +191,61 @@ ggplot(data = labrynth_clean,
   geom_smooth(method = "lm",
               show.legend = FALSE,
               se = FALSE) +
-  theme_light(base_family = "Psans") + # change theme and font
+  theme_bw(base_family = "Gel") + # change theme and font
   labs(title = "Plant growth by species over time",
        x = "Date",
        y = "Plant height (in)",
        color = "Species") +
-  theme(legend.position = "right",
+  theme(text = element_text(size = 30), # set font size
+        legend.position = "right",
         plot.title = element_text(hjust = 0.5))
+```
+
+### Figure 3. Native vs. non-native species height medians
+
+```{r}
+#| label: boxplot species height
+nat <- ggplot(data = native,
+              aes(x = nati,
+                  y = height)) +
+  scale_y_continuous(limits = c(0, 55)) +
+  expand_limits(y = 0) +
+  # first layer: boxplot
+  geom_boxplot(color = "darkolivegreen4",
+               fill = "darkolivegreen2",
+               alpha = 0.3) +
+  # second layer: jitter plot
+  geom_jitter(size = 3.5,
+              height = 0, # making sure points don't move along y-axis
+              width = 0.2,
+              color = "darkolivegreen3") + # narrowing width of jitter
+  theme_minimal(base_family = "Gel") +
+  theme(text = element_text(size = 30)) +
+  labs(x = NULL,
+       y = "Height")
+  
+non <- ggplot(data = non_native,
+              aes(x = nonn,
+                  y = height)) +
+  scale_y_continuous(limits = c(0, 55)) +
+   geom_boxplot(color = "aquamarine4",
+               fill = "aquamarine",
+               alpha = 0.3) +
+  # second layer: jitter plot
+  geom_jitter(size = 3.5,
+              height = 0, # making sure points don't move along y-axis
+              width = 0.2,
+              color = "aquamarine3") + # narrowing width of jitter
+  theme_minimal(base_family = "Gel") +
+  theme(text = element_text(size = 30)) +
+  labs(x = NULL,
+       y = "Height")
+
+wrap_plots(nat, non,
+     axes = "collect_y",
+     axis_titles = "collect") +
+  scale_y_continuous(limits = c(0, 55)) +
+  expand_limits(y = 0)
 ```
 
 ## Hypothesis 3.
@@ -209,7 +275,7 @@ model_pred2 <- ggpredict(
 ) 
 ```
 
-### Figure 3. Wind and plant height
+### Figure 4. Wind and plant height
 
 ```{r}
 #| label: Wind speed and plant height
@@ -222,21 +288,20 @@ ggplot(data = labrynth_clean,
                   ymin = conf.low, # set bottom of region
                   ymax = conf.high), # set top
               alpha = 0.2, # adjust tranparency
-              fill = "firebrick2") + # change color
+              fill = "mediumpurple") + # change color
   geom_line(data = model_pred2, # plot model prediction as line using mod_preds object
             aes(x = x, # use same x-axis
                 y = predicted), # set y-axis as predicted values
             linewidth = 1, # change line width to thicker 
-            color = "firebrick4") +
+            color = "mediumpurple4") +
   geom_point(size = 3.5,
              aes(color = common_name_plant)) +
-  theme_light(base_family = "Psans") + # change theme and font
+  theme_bw(base_family = "Gel") + # change theme and font
   labs(title = "Wind speed relationship with plant growth",
        x = "Wind speed (mph)",
        y = "Plant height (in)",
        color = "Species") +
-  theme(legend.position = "right",
+  theme(text = element_text(size = 30), # set font size
+        legend.position = "right",
         plot.title = element_text(hjust = 0.5))
 ```
-
-:P
