@@ -37,22 +37,29 @@ labrynth <- read_csv(here("data",
 # clean data
 labrynth_clean <- labrynth |> # create new object
   clean_names() # clean column names to lower case and underscores
+```
 
+##### figure and test dataframes
+
+```{r}
+#| label: dataframes
 # native df
 native <- labrynth_clean |> 
   rename(height = height_of_each_plant_species_in,
          species = common_name_plant) |> 
-  mutate(nati = "Native") |> 
-  select(species, height, nati) |> 
+  mutate(locality = "Native") |> 
+  select(species, height, locality) |> 
   filter(species %in% c("*Western Ragweed", "*Coyote Brush"))
 
 # non_native df
 non_native <- labrynth_clean |> 
   rename(height = height_of_each_plant_species_in,
          species = common_name_plant) |> 
-  mutate(nonn = "Non-native") |>  
-  select(species, height, nonn) |> 
+  mutate(locality = "Non-native") |>  
+  select(species, height, locality) |> 
   filter_out(species %in% c("*Western Ragweed", "*Coyote Brush"))
+
+locality_df <- rbind(native, non_native)
 ```
 
 # Figures
@@ -187,7 +194,8 @@ ggplot(data = labrynth_clean,
        aes(x = date,
            y = height_of_each_plant_species_in,
            color = common_name_plant)) +
-  geom_point(size = 3.5) +
+  geom_point(size = 3.5,
+             alpha = 0.5) +
   geom_smooth(method = "lm",
               show.legend = FALSE,
               se = FALSE) +
@@ -201,12 +209,12 @@ ggplot(data = labrynth_clean,
         plot.title = element_text(hjust = 0.5))
 ```
 
-### Figure 3. Native vs. non-native species height medians
+### Figure 3.1 Native vs. non-native species height medians
 
 ```{r}
 #| label: boxplot species height
 nat <- ggplot(data = native,
-              aes(x = nati,
+              aes(x = locality,
                   y = height)) +
   scale_y_continuous(limits = c(0, 55)) +
   expand_limits(y = 0) +
@@ -225,7 +233,7 @@ nat <- ggplot(data = native,
        y = "Height")
   
 non <- ggplot(data = non_native,
-              aes(x = nonn,
+              aes(x = locality,
                   y = height)) +
   scale_y_continuous(limits = c(0, 55)) +
    geom_boxplot(color = "aquamarine4",
@@ -244,8 +252,45 @@ non <- ggplot(data = non_native,
 wrap_plots(nat, non,
      axes = "collect_y",
      axis_titles = "collect") +
-  scale_y_continuous(limits = c(0, 55)) +
   expand_limits(y = 0)
+```
+
+### Figure 3.2 Native vs. Non-native height boxplots (again)
+
+```{r}
+#| label: locality height boxplot
+ggplot(data = locality_df,
+       aes(x = locality,
+           y = height,
+           color = locality)) +
+  # first layer: boxplot
+  geom_boxplot(alpha = 0.3,
+               size = 1,
+               color = c("Native" = "darkolivegreen4",
+                                "Non-native" = "aquamarine4"),
+               fill = c("Native" = "darkolivegreen2",
+                                "Non-native" = "aquamarine2")) +
+  # second layer: jitter plot
+  geom_jitter(size = 3.5,
+              height = 0, # making sure points don't move along y-axis
+              width = 0.2) + # narrowing width of jitter
+  scale_color_manual(values = c("Native" = "darkolivegreen",
+                                "Non-native" = "aquamarine3")) + # changing the point colors
+  theme_minimal(base_family = "Gel") +
+  theme(text = element_text(size = 30),
+        legend.position = "none") +
+  labs(x = NULL,
+       y = "Height")
+```
+
+##### statistical analysis – Mann-Whitney U
+
+```{r}
+#| label: median comparison t-test
+wilcox.test(
+  height ~ locality,
+  data = locality_df
+)
 ```
 
 ## Hypothesis 3.
@@ -295,6 +340,7 @@ ggplot(data = labrynth_clean,
             linewidth = 1, # change line width to thicker 
             color = "mediumpurple4") +
   geom_point(size = 3.5,
+             alpha = 0.5,
              aes(color = common_name_plant)) +
   theme_bw(base_family = "Gel") + # change theme and font
   labs(title = "Wind speed relationship with plant growth",
